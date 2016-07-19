@@ -1,0 +1,22 @@
+{
+  "name": "haptic-map",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Drm1804/haptic-map.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Drm1804/haptic-map/issues"
+  },
+  "homepage": "https://github.com/Drm1804/haptic-map#readme",
+  "devDependencies": {
+    "browser-sync": "^2.13.0",
+    "gulp": "^3.9.1"
+  }
+}
