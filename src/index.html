@@ -5,14 +5,22 @@
     <title>Игра 5 в ряд</title>
 
     <!--Тиблицы стилей-->
-    <link rel="stylesheet" href="css/gomoku.css"/>
+    <!--<link rel="stylesheet" href="css/gomoku.css"/>-->
 
-    <!--Подключаемые библиотеки-->
-    <script src="js/lib/jquery-3.0.0.min.js"></script>
+    <!-- inject:css -->
+    <!-- endinject -->
 
-    <!--Файлы приложения Gomoku-->
-    <script src="js/gomoku.js"></script>
 
+    <!--Файлы приложения js-->
+    <!-- inject:js -->
+    <!-- endinject -->
+
+
+    <script>
+        $(function(){
+           gomoku.initModule();
+        });
+    </script>
 </head>
 <body>
 <div id="gomoku"></div>
