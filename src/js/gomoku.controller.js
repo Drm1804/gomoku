@@ -2,7 +2,7 @@
 
 
 /*
- * Модуль gomoku.view, отвечает за обработку действий пользователя
+ * Модуль gomoku.controller, отвечает за обработку действий пользователя
  *
  * Предназначение:
  *   - todo перехват события активации игры
@@ -11,13 +11,25 @@
  *
  * */
 
-gomoku.view = (function(){
+gomoku.controller = (function () {
 
-    function initModule(){
+    /*
+    * Публичный метод listenerClickField
+    *
+    * Активирует событие по клику и передает данные в модель
+    *
+    * */
+    function listenerClickField(clickClass) {
+        clickClass.click(function (ev) {
+            var id = $(ev.target).attr('id');
+            gomoku.model.setMove(id, 'x');
+            return false;
+        });
 
     }
 
-    return{
-        initModule:initModule
+
+    return {
+        listenerClickField: listenerClickField
     }
 })();
