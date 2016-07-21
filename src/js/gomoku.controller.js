@@ -14,12 +14,12 @@
 gomoku.controller = (function () {
 
     /*
-    * Публичный метод listenerClickField
+    * Публичный метод bindClickField
     *
     * Активирует событие по клику и передает данные в модель
     *
     * */
-    function listenerClickField(clickClass) {
+    function bindClickField(clickClass) {
         clickClass.click(function (ev) {
             var id = $(ev.target).attr('id');
             gomoku.model.setMove(id, 'x');
@@ -28,8 +28,13 @@ gomoku.controller = (function () {
 
     }
 
+    function unbindClick(clickClass){
+        clickClass.unbind('click');
+    }
+
 
     return {
-        listenerClickField: listenerClickField
+        bindClickField: bindClickField,
+        unbindClick: unbindClick
     }
 })();

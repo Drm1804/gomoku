@@ -15,6 +15,7 @@ gomoku.view = (function () {
     var classFieldElement = 'click';
 
     function showMove(id, type){
+        console.log(type)
         $('#'+id).text(type);
 
 
@@ -41,6 +42,10 @@ gomoku.view = (function () {
     }
 
     function initModule($field, fieldSize) {
+        // todo Создает окно приветствия
+        // todo Создает окно паузы
+        // todo Создает игровое поле
+        // todo Создает окно завершения игры
     }
 
     return {
