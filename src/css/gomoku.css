@@ -1,12 +1,141 @@
-body{
+html, body {
+    padding: 0;
+    margin: 0;
 
 }
-table.field{
+
+.gomoku {
+    /*position: relative;*/
+}
+
+table.field {
     border-spacing: 0;
 }
-td{
+
+td {
     width: 20px;
     height: 20px;
     border: 1px solid #eee;
     text-align: center;
 }
+
+/*
+    Модальное окно Пауза
+*/
+
+.g-pause {
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, .7);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.g-pause-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -50px 0 0 -100px;
+    color: #fff;
+    width: 200px;
+    height: 80px;
+    border: 2px dashed red;
+    text-shadow: 0 0 3px #000;
+}
+
+.g-pause-box-text {
+    width: 100%;
+    display: block;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 2rem;
+    padding: 21px 0;
+
+}
+
+/*
+    Конец модальное окно Пауза
+*/
+
+/*
+    Модальное окно Старт
+*/
+
+.g-start {
+    position: absolute;
+    background: rgba(0, 0, 0, .7);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.g-start-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -220px 0 0 -150px;
+    width: 300px;
+    height: 430px;
+    border: 2px dashed red;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 0 3px #000;
+}
+
+.g-start-size-input {
+    display: block;
+    margin: 10px auto;
+    width: 70px;
+    text-align: center;
+    font-size: 1rem;
+    border-radius: 3px;
+}
+
+.g-start-op-man-label {
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    background: url(../img/man.png) 50% 50% no-repeat;
+    background-size: 80%;
+    cursor: pointer;
+    border: 2px dashed transparent;
+}
+
+.g-start-op-pc-label {
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    background: url(../img/pc.png) 50% 50% no-repeat;
+    background-size: 80%;
+    cursor: pointer;
+    border: 2px dashed transparent;
+}
+
+.g-start-radio-input:checked + label {
+    border: 2px dashed red;
+}
+.g-start-type-x,
+.g-start-type-o{
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 3rem;
+    border: 2px dashed transparent;
+}
+.g-start-run-game{
+    display: block;
+    font-size: 1rem;
+    text-align: center;
+    margin: 10px auto;
+    padding: 5px 10px;
+}
+
+/*
+    Конец модальное окно Старт
+*/

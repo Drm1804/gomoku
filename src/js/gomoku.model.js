@@ -156,8 +156,13 @@ gomoku.model = (function () {
             field.push(' ');
         }
 
-        // Создавем поле
+        // Создаём поле
         gomoku.view.createHtmlField($field, config.fieldSize);
+
+        // Создаем меню паузы
+        gomoku.view.createHtmlPauseWindow($field);
+
+        gomoku.view.createHtmlStartWindow($field);
 
 
         jqMap.$fieldEl = $('.' + gomoku.view.returnClassFieldElement());
