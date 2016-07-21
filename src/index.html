@@ -16,7 +16,9 @@
 
     <script>
         $(function(){
-           gomoku.initModule($('#gomoku'));
+            var model = new G.Model();
+            var view = new G.View(model, $('#gomoku'));
+//            var controller = new G.Controller(model, view);
         });
     </script>
 </head>

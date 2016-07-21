@@ -2,39 +2,19 @@
 
 
 /*
- * Модуль gomoku.controller, отвечает за обработку действий пользователя
+ * gomoku.controller.
  *
- * Предназначение:
- *   - todo перехват события активации игры
- *   - todo перехват события заполнения настроек игры
- *   - todo перехват действий пользователя во время игры
+ * Контроллер. Знает о модели и виде. Вешает ивенты наобъекты вида, связывая модуль и вид.
+ *
  *
  * */
 
-gomoku.controller = (function () {
+G.Controller = (function (_model, _view) {
 
-    /*
-    * Публичный метод bindClickField
-    *
-    * Активирует событие по клику и передает данные в модель
-    *
-    * */
-    function bindClickField(clickClass) {
-        clickClass.click(function (ev) {
-            var id = $(ev.target).attr('id');
-            gomoku.model.setMove(id, 'x');
-            return false;
-        });
+    var that = this;
+    var model = model;
+    var view = _view;
 
-    }
+    // view.
 
-    function unbindClick(clickClass){
-        clickClass.unbind('click');
-    }
-
-
-    return {
-        bindClickField: bindClickField,
-        unbindClick: unbindClick
-    }
 })();
