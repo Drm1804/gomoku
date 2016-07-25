@@ -12,4 +12,9 @@ G.Model = function () {
     this.modelChangedSubject = G.makeObservableSubject();
 
 
+    this.refresh = function(ev, data){
+        that.modelChangedSubject.notifyObservers(ev, data);
+    }
+
+
 };

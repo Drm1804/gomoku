@@ -9,12 +9,17 @@
  *
  * */
 
-G.Controller = (function (_model, _view) {
+G.Controller = function (_model, _view) {
 
     var that = this;
-    var model = model;
+    var model = _model;
     var view = _view;
 
-    // view.
+    view.jqMap.startCheckOpponent.on('click', function(ev){
+        model.refresh(ev)
+    });
 
-})();
+    view.jqMap.btnRunGame.on('click', function(ev){
+        model.refresh(ev)
+    });
+};

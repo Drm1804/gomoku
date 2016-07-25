@@ -11,7 +11,7 @@ G.View = function (_model, rootObject) {
 
     var that = this;
     var model = _model;
-    var jqMap = {};
+    that.jqMap = {};
     that.createHtmlField = createHtmlField;
     that.createHtmlPauseWindow = createHtmlPauseWindow;
     that.createHtmlStartWindow = createHtmlStartWindow;
@@ -24,7 +24,7 @@ G.View = function (_model, rootObject) {
      */
 
     function run(){
-        jqMap.rootObject = rootObject;
+        that.jqMap.rootObject = rootObject;
         that.createHtmlStartWindow();
     }
 
@@ -48,9 +48,9 @@ G.View = function (_model, rootObject) {
             '<input type="number" value="20" id="g-start-size-input" class="g-start-size-input">' +
             '<h3>Противник:</h3>' +
             '<input style="display:none" class="g-start-radio-input g-start-radio-input--opponent" type="radio" value="man" name="opponent" id="g-start-opponent-man">' +
-            '<label class="g-start-op-man-label" for="g-start-opponent-man"></label>' +
+            '<label class="g-start-op-label g-start-op-man-label" for="g-start-opponent-man"></label>' +
             '<input style="display:none" class="g-start-radio-input g-start-radio-input--opponent" type="radio" value="pc" name="opponent" id="g-start-opponent-pc">' +
-            '<label class="g-start-op-pc-label" for="g-start-opponent-pc"></label>' +
+            '<label class="g-start-op-label g-start-op-pc-label" for="g-start-opponent-pc"></label>' +
             '<div class="g-start-type-box">' +
             '<h3>Играть за:</h3>' +
             '<input style="display:none" type="radio" class="g-start-radio-input g-start-radio-input--type" id="g-start-type-x" name="typeFigure">' +
@@ -62,11 +62,29 @@ G.View = function (_model, rootObject) {
             '</div>' +
             '</div>';
 
-        jqMap.rootObject.append(html);
-        jqMap.startTypeBox = rootObject.find('.g-start-type-box');
-        jqMap.startCheckOpponent = rootObject.find('.g-start-radio-input--opponent');
-        jqMap.startCheckTypeGame = rootObject.find('.g-start-radio-input--type');
-        jqMap.btnRunGame = rootObject.find('.g-start-run-game')
+        that.jqMap.rootObject.append(html);
+        that.jqMap.startTypeBox = rootObject.find('.g-start-type-box');
+        that.jqMap.startCheckOpponent = rootObject.find('.g-start-op-label');
+        that.jqMap.btnRunGame = rootObject.find('.g-start-run-game');
+
+
+        // Вешаем наблюдателя, который будет скрывать и показывать выбор команды (крестики или нолики)
+        model.modelChangedSubject.addObserver(function(ev){
+            if($(ev.target).attr('class').indexOf('g-start-op-label') != -1){
+                showGameTypeBox(ev);
+            }
+        });
+
+        // Вешаем наблюдателя на кнопку "Начать игру"
+        model.modelChangedSubject.addObserver(function(ev){
+
+
+            if($(ev.target).attr('class').indexOf('g-start-run-game') != -1){
+                startGame(ev);
+            }
+
+
+        });
     }
 
     function createHtmlField(size) {
@@ -83,5 +101,33 @@ G.View = function (_model, rootObject) {
         html += '</table>';
         rootObject.append(html);
     }
+
+
+    /*************************/
+    // Функции для наблшюдателей
+    /*************************/
+
+    function showGameTypeBox(ev){
+        var clickDomClass = $(ev.target).attr('for');
+        var hideElement = that.jqMap.startTypeBox;
+
+        if(clickDomClass === 'g-start-opponent-pc'){
+            hideElement.show();
+        } else {
+            hideElement.hide();
+        }
+    }
+
+    function startGame(ev){
+
+        // todo Сохранить данные из формы в переменную
+        // todo Сделать кнопку "Начать игру неактивной, пока данные не заполнены"
+        // todo Есдли все успещно удалить наблюдателя за наблдателями стартовой формы
+        // todo Запустить игру с выбранными параметрами
+        console.log( $(ev.target));
+        console.log( that.jqMap.btnRunGame);
+    }
+
+
 
 };
