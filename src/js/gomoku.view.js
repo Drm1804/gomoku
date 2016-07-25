@@ -13,6 +13,7 @@ G.View = function (_model, rootObject) {
     var model = _model;
     that.jqMap = {};
     that.createHtmlField = createHtmlField;
+    that.togglePauseWindow = togglePauseWindow;
     that.createHtmlPauseWindow = createHtmlPauseWindow;
     that.createHtmlStartWindow = createHtmlStartWindow;
     that.run = run;
@@ -23,20 +24,29 @@ G.View = function (_model, rootObject) {
      * Метод run исполняется сразу
      */
 
-    function run(){
+    function run() {
         that.jqMap.rootObject = rootObject;
         that.createHtmlStartWindow();
+        that.createHtmlPauseWindow();
     }
 
 
     function createHtmlPauseWindow() {
         var html = '' +
-            '<div class="g-pause">' +
+            '<div class="g-pause" id="g-pause">' +
             '<div class="g-pause-box"><span class="g-pause-box-text">Пауза</span></div>' +
             '</div>';
 
-        rootObject.append(html);
+        that.jqMap.rootObject.append(html);
+        that.jqMap.startform = rootObject.find('#g-pause');
+    }
 
+    function togglePauseWindow(){
+        if(that.jqMap.startform.is(":visible")){
+            that.jqMap.startform.hide();
+        } else {
+            that.jqMap.startform.show();
+        }
     }
 
     function createHtmlStartWindow() {
@@ -82,7 +92,7 @@ G.View = function (_model, rootObject) {
         for (var row = 0; row < size; row++) {
             html += '<tr>';
             for (var col = 0; col < size; col++) {
-                html += '<td id="el' + (size * row + col) + '" class="'+config.classFieldElement+'"></td>';
+                html += '<td id="el' + (size * row + col) + '" class="' + config.classFieldElement + '"></td>';
             }
             html += '</tr>';
         }
@@ -96,12 +106,12 @@ G.View = function (_model, rootObject) {
     // Функции для наблюдателей
     /*************************/
 
-    function showGameTypeBox(ev){
-        if($(ev.target).attr('class').indexOf('g-start-op-label') != -1){
+    function showGameTypeBox(ev) {
+        if (ev.type === 'click' && $(ev.target).attr('class').indexOf('g-start-op-label') != -1) {
             var clickDomClass = $(ev.target).attr('for');
             var hideElement = that.jqMap.startTypeBox;
 
-            if(clickDomClass === 'g-start-opponent-pc'){
+            if (clickDomClass === 'g-start-opponent-pc') {
                 hideElement.show();
             } else {
                 hideElement.hide();
@@ -109,9 +119,22 @@ G.View = function (_model, rootObject) {
         }
     }
 
-    function startGame(ev){
+    function gamePause(ev) {
+        if (ev.type === 'keydown') {
 
-        if($(ev.target).attr('class').indexOf('g-start-run-game') != -1){
+            if (ev.keyCode == 27 || ev.keyCode == 19) {
+                that.togglePauseWindow();
+
+            }
+
+
+        }
+
+    }
+
+    function startGame(ev) {
+
+        if (ev.type === 'click' && $(ev.target).attr('class').indexOf('g-start-run-game') != -1) {
             var form = $('[name="startForm"]');
             var data = {
                 size: form.find('#g-start-size-input').val(),
@@ -123,10 +146,14 @@ G.View = function (_model, rootObject) {
             var start = model.startGame();
 
             // Удаляем наблюдателей стартовой формы
-            if(start){
+            if (start) {
                 model.modelChangedSubject.removeObserver(showGameTypeBox);
                 model.modelChangedSubject.removeObserver(startGame);
             }
+
+
+            // Вешаем наблюдателя игровой паузы
+            model.modelChangedSubject.addObserver(gamePause);
         }
     }
 

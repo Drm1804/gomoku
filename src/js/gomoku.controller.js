@@ -24,4 +24,10 @@ G.Controller = function (_model, _view) {
 
         return false;
     });
+
+
+    // Событие нажатия клавиши на клавиатуре
+    view.jqMap.rootObject.keydown(function(ev){
+        model.refresh(ev);
+    })
 };
