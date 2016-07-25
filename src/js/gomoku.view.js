@@ -12,8 +12,11 @@ G.View = function (_model, rootObject) {
     var that = this;
     var model = _model;
     that.jqMap = {};
-    that.createHtmlField = createHtmlField;
+    that.runGame = runGame;
+    that.toggleGameField = toggleGameField;
+    that.toggleStartWindow = toggleStartWindow;
     that.togglePauseWindow = togglePauseWindow;
+    that.createHtmlGameField = createHtmlGameField;
     that.createHtmlPauseWindow = createHtmlPauseWindow;
     that.createHtmlStartWindow = createHtmlStartWindow;
     that.run = run;
@@ -28,6 +31,7 @@ G.View = function (_model, rootObject) {
         that.jqMap.rootObject = rootObject;
         that.createHtmlStartWindow();
         that.createHtmlPauseWindow();
+
     }
 
 
@@ -38,14 +42,14 @@ G.View = function (_model, rootObject) {
             '</div>';
 
         that.jqMap.rootObject.append(html);
-        that.jqMap.startform = rootObject.find('#g-pause');
+        that.jqMap.pauseForm = that.jqMap.rootObject.find('#g-pause');
     }
 
-    function togglePauseWindow(){
-        if(that.jqMap.startform.is(":visible")){
-            that.jqMap.startform.hide();
+    function togglePauseWindow() {
+        if (that.jqMap.pauseForm.is(":visible")) {
+            that.jqMap.pauseForm.hide();
         } else {
-            that.jqMap.startform.show();
+            that.jqMap.pauseForm.show();
         }
     }
 
@@ -73,10 +77,10 @@ G.View = function (_model, rootObject) {
             '</form>';
 
         that.jqMap.rootObject.append(html);
-        that.jqMap.startform = rootObject.find('#g-start');
-        that.jqMap.startTypeBox = rootObject.find('.g-start-type-box');
-        that.jqMap.startCheckOpponent = rootObject.find('.g-start-op-label');
-        that.jqMap.btnRunGame = rootObject.find('.g-start-run-game');
+        that.jqMap.startForm = that.jqMap.rootObject.find('#g-start');
+        that.jqMap.startTypeBox = that.jqMap.rootObject.find('.g-start-type-box');
+        that.jqMap.startCheckOpponent = that.jqMap.rootObject.find('.g-start-op-label');
+        that.jqMap.btnRunGame = that.jqMap.rootObject.find('.g-start-run-game');
 
 
         // Вешаем наблюдателя, который будет скрывать и показывать выбор команды (крестики или нолики)
@@ -86,19 +90,43 @@ G.View = function (_model, rootObject) {
         model.modelChangedSubject.addObserver(startGame);
     }
 
-    function createHtmlField(size) {
-        var html = '<table class="field">';
+    function toggleStartWindow() {
+        if (that.jqMap.startForm.is(":visible")) {
+            that.jqMap.startForm.hide();
+        } else {
+            that.jqMap.startForm.show();
+        }
+    }
+
+    function createHtmlGameField(size) {
+        var html = '<table id="g-field" class="g-field">';
 
         for (var row = 0; row < size; row++) {
             html += '<tr>';
             for (var col = 0; col < size; col++) {
-                html += '<td id="el' + (size * row + col) + '" class="' + config.classFieldElement + '"></td>';
+                html += '<td id="el' + (size * row + col) + '" class="g-click-field"></td>';
             }
             html += '</tr>';
         }
 
         html += '</table>';
-        rootObject.append(html);
+        that.jqMap.rootObject.append(html);
+        that.jqMap.gameField = that.jqMap.rootObject.find('#g-field');
+        that.jqMap.gameFieldEl = that.jqMap.rootObject.find('.g-click-field');
+    }
+
+    function toggleGameField() {
+        if (that.jqMap.gameField.is(":visible")) {
+            that.jqMap.gameField.hide();
+        } else {
+            that.jqMap.gameField.show();
+        }
+    }
+
+    function runGame(data) {
+
+
+
     }
 
 
@@ -121,15 +149,11 @@ G.View = function (_model, rootObject) {
 
     function gamePause(ev) {
         if (ev.type === 'keydown') {
-
             if (ev.keyCode == 27 || ev.keyCode == 19) {
                 that.togglePauseWindow();
 
             }
-
-
         }
-
     }
 
     function startGame(ev) {
@@ -141,20 +165,14 @@ G.View = function (_model, rootObject) {
                 opponent: form.find('.g-start-radio-input--opponent:checked').val(),
                 type: form.find('.g-start-radio-input--type:checked').val()
             };
-
-            // Запускаем игру
-            var start = model.startGame();
+            model.setGameData(data);
 
             // Удаляем наблюдателей стартовой формы
-            if (start) {
-                model.modelChangedSubject.removeObserver(showGameTypeBox);
-                model.modelChangedSubject.removeObserver(startGame);
-            }
-
+            model.modelChangedSubject.removeObserver(showGameTypeBox);
+            model.modelChangedSubject.removeObserver(startGame);
 
             // Вешаем наблюдателя игровой паузы
             model.modelChangedSubject.addObserver(gamePause);
         }
     }
-
 };

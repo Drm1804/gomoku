@@ -8,19 +8,36 @@
  * */
 
 G.Model = function () {
-    var that = this;
-    this.modelChangedSubject = G.makeObservableSubject();
 
+    var gameData = {};
 
-    this.refresh = function(ev, data){
-        that.modelChangedSubject.notifyObservers(ev, data);
-    };
+    var modelChangedSubject = G.makeObservableSubject();
 
-    this.startGame = function(){
+    function refresh(ev, data){
+        modelChangedSubject.notifyObservers(ev, data);
+    }
 
+    function setGameData(data){
+        gameData = data;
+        if(data.opponent === 'man'){
+            delete  gameData.type;
+        }
+    }
 
+    function getGameData(){
+        return gameData
+    }
+
+    function startGame(){
 
         return true;
-    };
+    }
 
+     return{
+         modelChangedSubject: modelChangedSubject,
+         getGameData: getGameData,
+         setGameData: setGameData,
+         startGame: startGame,
+         refresh: refresh
+     }
 };

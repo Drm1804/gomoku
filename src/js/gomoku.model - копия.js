@@ -43,7 +43,6 @@ gomoku.model = (function () {
         }
     }
 
-
     /*
      * Приватный метод getElementData
      *

@@ -6,7 +6,6 @@
  *
  * Контроллер. Знает о модели и виде. Вешает ивенты наобъекты вида, связывая модуль и вид.
  *
- *
  * */
 
 G.Controller = function (_model, _view) {
@@ -16,18 +15,32 @@ G.Controller = function (_model, _view) {
     var view = _view;
 
     view.jqMap.startCheckOpponent.on('click', function(ev){
-        model.refresh(ev)
+        model.refresh(ev);
     });
 
     view.jqMap.btnRunGame.on('click', function(ev){
         model.refresh(ev);
 
+        // Запускаем игру
+        var size = model.getGameData().size;
+        view.toggleStartWindow();
+        view.createHtmlGameField(size);
+        runFieldObserver();
         return false;
     });
 
-
     // Событие нажатия клавиши на клавиатуре
-    view.jqMap.rootObject.keydown(function(ev){
+    $('body').keydown(function(ev){
         model.refresh(ev);
-    })
+    });
+
+
+    function runFieldObserver(){
+        // Событие клика по полю
+        view.jqMap.gameFieldEl.on('click', function(ev){
+            model.refresh(ev);
+        });
+    }
+
+
 };
