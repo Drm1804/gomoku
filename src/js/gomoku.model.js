@@ -14,7 +14,13 @@ G.Model = function () {
 
     this.refresh = function(ev, data){
         that.modelChangedSubject.notifyObservers(ev, data);
-    }
+    };
 
+    this.startGame = function(){
+
+
+
+        return true;
+    };
 
 };

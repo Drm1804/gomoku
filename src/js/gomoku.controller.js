@@ -20,6 +20,8 @@ G.Controller = function (_model, _view) {
     });
 
     view.jqMap.btnRunGame.on('click', function(ev){
-        model.refresh(ev)
+        model.refresh(ev);
+
+        return false;
     });
 };
