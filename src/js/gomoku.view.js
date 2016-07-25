@@ -12,13 +12,14 @@ G.View = function (_model, rootObject) {
     var that = this;
     var model = _model;
     that.jqMap = {};
-    that.runGame = runGame;
     that.toggleGameField = toggleGameField;
     that.toggleStartWindow = toggleStartWindow;
+    that.toggleFinalWindow = toggleFinalWindow;
     that.togglePauseWindow = togglePauseWindow;
     that.createHtmlGameField = createHtmlGameField;
     that.createHtmlPauseWindow = createHtmlPauseWindow;
     that.createHtmlStartWindow = createHtmlStartWindow;
+    that.createHtmlFinalWindow = createHtmlFinalWindow;
     that.run = run;
     that.run();
 
@@ -34,6 +35,23 @@ G.View = function (_model, rootObject) {
 
     }
 
+    function createHtmlFinalWindow(){
+        var html = '' +
+            '<div class="g-final" id="g-final">' +
+            '<div class="g-final-box"><span class="g-final-box-text">Конец</span></div>' +
+            '</div>';
+
+        that.jqMap.rootObject.append(html);
+        that.jqMap.finalForm = that.jqMap.rootObject.find('#g-final');
+    }
+
+    function toggleFinalWindow(){
+        if (that.jqMap.finalForm.is(":visible")) {
+            that.jqMap.finalForm.hide();
+        } else {
+            that.jqMap.finalForm.show();
+        }
+    }
 
     function createHtmlPauseWindow() {
         var html = '' +
@@ -61,9 +79,9 @@ G.View = function (_model, rootObject) {
             '<label for="g-start-size-input">Величина игрового поля</label>' +
             '<input type="number" value="20" id="g-start-size-input" class="g-start-size-input">' +
             '<h3>Противник:</h3>' +
-            '<input style="display:none" class="g-start-radio-input g-start-radio-input--opponent" type="radio" value="man" name="opponent" id="g-start-opponent-man" >' +
+            '<input style="display:none" class="g-start-radio-input g-start-radio-input--opponent" type="radio" value="man" name="opponent" id="g-start-opponent-man" checked>' +
             '<label class="g-start-op-label g-start-op-man-label" for="g-start-opponent-man"></label>' +
-            '<input style="display:none" class="g-start-radio-input g-start-radio-input--opponent" type="radio" value="pc" name="opponent" id="g-start-opponent-pc" checked>' +
+            '<input style="display:none" class="g-start-radio-input g-start-radio-input--opponent" type="radio" value="pc" name="opponent" id="g-start-opponent-pc" >' +
             '<label class="g-start-op-label g-start-op-pc-label" for="g-start-opponent-pc"></label>' +
             '<div class="g-start-type-box">' +
             '<h3>Играть за:</h3>' +
@@ -123,11 +141,6 @@ G.View = function (_model, rootObject) {
         }
     }
 
-    function runGame(data) {
-
-
-
-    }
 
 
     /*************************/
@@ -156,6 +169,18 @@ G.View = function (_model, rootObject) {
         }
     }
 
+    function gameMove(ev){
+        if(ev.type === 'gameLoop'){
+            that.jqMap.gameField.find('#el'+ev.numFieldEl).text(ev.typeMove)
+        }
+    }
+
+    function gameFinal(ev){
+        if(ev.type === 'gameWin'){
+            toggleFinalWindow();
+        }
+    }
+
     function startGame(ev) {
 
         if (ev.type === 'click' && $(ev.target).attr('class').indexOf('g-start-run-game') != -1) {
@@ -173,6 +198,14 @@ G.View = function (_model, rootObject) {
 
             // Вешаем наблюдателя игровой паузы
             model.modelChangedSubject.addObserver(gamePause);
+
+            // Вешаем наблюдателя игровых ходов
+            model.modelChangedSubject.addObserver(gameMove);
+
+            // Вешаем наблюдателя конца игры
+            model.modelChangedSubject.addObserver(gameFinal);
         }
     }
+
+
 };

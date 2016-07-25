@@ -25,6 +25,7 @@ G.Controller = function (_model, _view) {
         var size = model.getGameData().size;
         view.toggleStartWindow();
         view.createHtmlGameField(size);
+        view.createHtmlFinalWindow();
         runFieldObserver();
         return false;
     });
@@ -38,6 +39,7 @@ G.Controller = function (_model, _view) {
     function runFieldObserver(){
         // Событие клика по полю
         view.jqMap.gameFieldEl.on('click', function(ev){
+            model.move(ev);
             model.refresh(ev);
         });
     }

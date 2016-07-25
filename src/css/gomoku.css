@@ -21,9 +21,9 @@ td {
 }
 
 /*
-    Модальное окно Пауза
+    Модальное окно Пауза/Конец
 */
-
+.g-final,
 .g-pause {
     display: none;
     position: absolute;
@@ -35,6 +35,7 @@ td {
     z-index: 1000;
 }
 
+.g-final-box,
 .g-pause-box {
     position: absolute;
     top: 50%;
@@ -47,6 +48,7 @@ td {
     text-shadow: 0 0 3px #000;
 }
 
+.g-final-box-text,
 .g-pause-box-text {
     width: 100%;
     display: block;
@@ -58,7 +60,7 @@ td {
 }
 
 /*
-    Конец модальное окно Пауза
+    Конец модальное окно Пауза/Конец
 */
 
 /*
@@ -81,7 +83,6 @@ td {
     left: 50%;
     margin: -220px 0 0 -150px;
     width: 300px;
-    height: 430px;
     border: 2px dashed red;
     color: #fff;
     text-align: center;
