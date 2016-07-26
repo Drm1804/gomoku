@@ -35,7 +35,7 @@ G.View = function (_model, rootObject) {
 
     }
 
-    function createHtmlFinalWindow(){
+    function createHtmlFinalWindow() {
         var html = '' +
             '<div class="g-final" id="g-final">' +
             '<div class="g-final-box"><span class="g-final-box-text">Конец</span></div>' +
@@ -43,9 +43,10 @@ G.View = function (_model, rootObject) {
 
         that.jqMap.rootObject.append(html);
         that.jqMap.finalForm = that.jqMap.rootObject.find('#g-final');
+        that.jqMap.finalText = that.jqMap.rootObject.find('.g-final-box-text');
     }
 
-    function toggleFinalWindow(){
+    function toggleFinalWindow() {
         if (that.jqMap.finalForm.is(":visible")) {
             that.jqMap.finalForm.hide();
         } else {
@@ -79,9 +80,9 @@ G.View = function (_model, rootObject) {
             '<label for="g-start-size-input">Величина игрового поля</label>' +
             '<input type="number" value="20" id="g-start-size-input" class="g-start-size-input">' +
             '<h3>Противник:</h3>' +
-            '<input style="display:none" class="g-start-radio-input g-start-radio-input--opponent" type="radio" value="man" name="opponent" id="g-start-opponent-man" checked>' +
+            '<input style="display:none" class="g-start-radio-input g-start-radio-input--opponent" type="radio" value="man" name="opponent" id="g-start-opponent-man">' +
             '<label class="g-start-op-label g-start-op-man-label" for="g-start-opponent-man"></label>' +
-            '<input style="display:none" class="g-start-radio-input g-start-radio-input--opponent" type="radio" value="pc" name="opponent" id="g-start-opponent-pc" >' +
+            '<input style="display:none" class="g-start-radio-input g-start-radio-input--opponent" type="radio" value="pc" name="opponent" id="g-start-opponent-pc" checked>' +
             '<label class="g-start-op-label g-start-op-pc-label" for="g-start-opponent-pc"></label>' +
             '<div class="g-start-type-box">' +
             '<h3>Играть за:</h3>' +
@@ -117,13 +118,14 @@ G.View = function (_model, rootObject) {
     }
 
     function createHtmlGameField(size) {
+        var gameConfig = model.getGameData();
         var tomMenu = '<div id="g-menu" class="g-menu">' +
             '<div class="g-menu-item g-menu-item--active">' +
-            '<span class="g-menu-i-name">Игрок 1</span>' +
+            '<span class="g-menu-i-name"></span>' +
             '(Х)' +
             '</div>' +
             '<div class="g-menu-item">' +
-            '<span class="g-menu-i-name">Игрок 2</span>' +
+            '<span class="g-menu-i-name"></span>' +
             '(О)' +
             '</div></div>';
         var html = tomMenu + '<table id="g-field" class="g-field">';
@@ -143,6 +145,25 @@ G.View = function (_model, rootObject) {
         that.jqMap.menu = that.jqMap.rootObject.find('#g-menu');
         that.jqMap.menuItem = that.jqMap.menu.find('.g-menu-item');
         that.jqMap.menuItemName = that.jqMap.menu.find('.g-menu-i-name');
+
+        // Настраиваем название игроков
+        if (gameConfig.opponent === 'man') {
+
+            that.jqMap.menuItemName.eq(0).text('Игрок 1 ');
+            that.jqMap.menuItemName.eq(1).text('Игрок 2 ');
+
+        }
+
+        if (gameConfig.opponent === 'pc') {
+            if (gameConfig.type === 'x') {
+                that.jqMap.menuItemName.eq(0).text('Игрок ');
+                that.jqMap.menuItemName.eq(1).text('Компьютер ');
+            } else if (gameConfig.type === 'o') {
+                that.jqMap.menuItemName.eq(0).text('Компьютер ');
+                that.jqMap.menuItemName.eq(1).text('Игрок ');
+            }
+        }
+
     }
 
     function toggleGameField() {
@@ -152,8 +173,6 @@ G.View = function (_model, rootObject) {
             that.jqMap.gameField.show();
         }
     }
-
-
 
     /*************************/
     // Функции для наблюдателей
@@ -181,22 +200,48 @@ G.View = function (_model, rootObject) {
         }
     }
 
-    function gameMove(ev){
-        if(ev.type === 'gameLoop'){
-            that.jqMap.gameField.find('#el'+ev.numFieldEl).text(ev.typeMove)
+    function gameMove(ev) {
+        if (ev.type === 'gameLoop') {
+            that.jqMap.gameField.find('#el' + ev.numFieldEl).text(ev.typeMove)
         }
     }
 
-    function gameFinal(ev){
-        if(ev.type === 'gameWin'){
+    function gameFinal(ev) {
+        if (ev.type === 'gameWin') {
+
+            // Формируем сообщение
+
+            var gameConfig = model.getGameData();
+            var endTypeStep = model.getTypeStep();
+
+            // Настраиваем название игроков
+            if (gameConfig.opponent === 'man') {
+                if (endTypeStep === 'x') {
+                    that.jqMap.finalText.text('Победу одержал игрок 1 ');
+                }
+                if (endTypeStep === 'o') {
+                    that.jqMap.finalText.text('Победу одержал игрок 2 ');
+                }
+            }
+
+            if (gameConfig.opponent === 'pc') {
+                if (gameConfig.type === 'x') {
+                    that.jqMap.menuItemName.eq(0).text('Игрок ');
+                    that.jqMap.menuItemName.eq(1).text('Компьютер ');
+                } else if (gameConfig.type === 'o') {
+                    that.jqMap.menuItemName.eq(0).text('Компьютер ');
+                    that.jqMap.menuItemName.eq(1).text('Игрок ');
+                }
+            }
+
             toggleFinalWindow();
         }
     }
 
-    function changeMenuType(ev){
-        if(ev.type === 'changeType'){
+    function changeMenuType(ev) {
+        if (ev.type === 'changeType') {
             that.jqMap.menuItem.removeClass('g-menu-item--active');
-            switch(ev.newType){
+            switch (ev.newType) {
                 case('x'):
                     that.jqMap.menuItem.eq(0).addClass('g-menu-item--active');
                     break;

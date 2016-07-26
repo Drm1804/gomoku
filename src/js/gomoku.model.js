@@ -38,6 +38,11 @@ G.Model = function () {
         return config
     }
 
+    function getTypeStep(){
+        return typeStep;
+    }
+
+
     function toggleTypeStep() {
         if (typeStep === 'x') {
             typeStep = 'o';
@@ -51,7 +56,7 @@ G.Model = function () {
         });
     }
 
-    function moveMan(numEl) {
+    function gameWithMan(numEl) {
         var idNum = numEl.replace('el', '');
         if (field[idNum] == ' ' && typeStep !== 'undefined') {
             field[idNum] = typeStep;
@@ -67,7 +72,13 @@ G.Model = function () {
         }
     }
 
-    function movePC() {
+    function gameWithPC(numEl) {
+        if((config.type === 'x' && typeStep === 'x') || (config.type === 'o' && typeStep === 'o')){
+            gameWithMan(numEl);
+        }
+        if((config.type === 'x' && typeStep === 'o') || (config.type === 'o' && typeStep === 'x')){
+            console.log('Ходит компьютер')
+        }
 
     }
 
@@ -76,16 +87,15 @@ G.Model = function () {
         var numEl = $(ev.target).attr('id');
         switch (config.opponent) {
             case 'man':
-                moveMan(numEl);
+                gameWithMan(numEl);
                 break;
             case 'pc':
-                movePC();
+                gameWithPC(numEl);
                 break;
         }
     }
 
     function win(){
-        console.log('gameWin')
         modelChangedSubject.notifyObservers({
             type: 'gameWin',
             winnerType: typeStep
@@ -179,6 +189,7 @@ G.Model = function () {
 
     return {
         modelChangedSubject: modelChangedSubject,
+        getTypeStep: getTypeStep,
         getGameData: getGameData,
         setGameData: setGameData,
         checkWin: checkWin,
