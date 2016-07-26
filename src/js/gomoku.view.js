@@ -117,7 +117,16 @@ G.View = function (_model, rootObject) {
     }
 
     function createHtmlGameField(size) {
-        var html = '<table id="g-field" class="g-field">';
+        var tomMenu = '<div id="g-menu" class="g-menu">' +
+            '<div class="g-menu-item g-menu-item--active">' +
+            '<span class="g-menu-i-name">Игрок 1</span>' +
+            '(Х)' +
+            '</div>' +
+            '<div class="g-menu-item">' +
+            '<span class="g-menu-i-name">Игрок 2</span>' +
+            '(О)' +
+            '</div></div>';
+        var html = tomMenu + '<table id="g-field" class="g-field">';
 
         for (var row = 0; row < size; row++) {
             html += '<tr>';
@@ -131,6 +140,9 @@ G.View = function (_model, rootObject) {
         that.jqMap.rootObject.append(html);
         that.jqMap.gameField = that.jqMap.rootObject.find('#g-field');
         that.jqMap.gameFieldEl = that.jqMap.rootObject.find('.g-click-field');
+        that.jqMap.menu = that.jqMap.rootObject.find('#g-menu');
+        that.jqMap.menuItem = that.jqMap.menu.find('.g-menu-item');
+        that.jqMap.menuItemName = that.jqMap.menu.find('.g-menu-i-name');
     }
 
     function toggleGameField() {
@@ -181,6 +193,20 @@ G.View = function (_model, rootObject) {
         }
     }
 
+    function changeMenuType(ev){
+        if(ev.type === 'changeType'){
+            that.jqMap.menuItem.removeClass('g-menu-item--active');
+            switch(ev.newType){
+                case('x'):
+                    that.jqMap.menuItem.eq(0).addClass('g-menu-item--active');
+                    break;
+                case('o'):
+                    that.jqMap.menuItem.eq(1).addClass('g-menu-item--active');
+                    break;
+            }
+        }
+    }
+
     function startGame(ev) {
 
         if (ev.type === 'click' && $(ev.target).attr('class').indexOf('g-start-run-game') != -1) {
@@ -201,6 +227,9 @@ G.View = function (_model, rootObject) {
 
             // Вешаем наблюдателя игровых ходов
             model.modelChangedSubject.addObserver(gameMove);
+
+            // Вешаем наблюдателя смены типа хода
+            model.modelChangedSubject.addObserver(changeMenuType);
 
             // Вешаем наблюдателя конца игры
             model.modelChangedSubject.addObserver(gameFinal);

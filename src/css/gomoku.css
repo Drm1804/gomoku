@@ -19,7 +19,21 @@ td {
     border: 1px solid #eee;
     text-align: center;
 }
+.g-menu{
+    width: 1000px;
+    margin:0 auto;
+    text-align: center;
 
+}
+.g-menu-item{
+    display: inline-block;
+    width: 49%;
+    padding: 20px 0;
+    border: 2px dashed #eee;
+}
+.g-menu-item--active{
+    border: 2px dashed red;
+}
 /*
     Модальное окно Пауза/Конец
 */

@@ -79,12 +79,13 @@ G.Model = function () {
                 moveMan(numEl);
                 break;
             case 'pc':
+                movePC();
                 break;
         }
     }
 
     function win(){
-        console.log('win')
+        console.log('gameWin')
         modelChangedSubject.notifyObservers({
             type: 'gameWin',
             winnerType: typeStep
@@ -111,7 +112,7 @@ G.Model = function () {
                 if (getElementData(field, row, col) != ' ') {
 
                     // Проверяем победу по горизонтали
-                    if (col <= config.fieldSize - winRule) {
+                    if (col <= config.size - winRule) {
                         count = 1;
                         while (getElementData(field, row, col) == getElementData(field, row, col + count)) {
                             count += 1;
@@ -142,7 +143,7 @@ G.Model = function () {
                             while (getElementData(field, row, col) == getElementData(field, row + count, col + count)) {
                                 count += 1;
                                 if (count >= winRule) {
-                                    cowin();
+                                    win();
                                     return true;
                                 }
                             }
