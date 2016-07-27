@@ -16,7 +16,8 @@
 
     <script>
         $(function(){
-            var model = new G.Model();
+            var ai = new G.Ai()
+            var model = new G.Model(ai);
             var view = new G.View(model, $('#gomoku'));
             var controller = new G.Controller(model, view);
         });

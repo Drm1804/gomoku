@@ -1,6 +1,6 @@
 'use strict';
 
-G.Pattern = function(){
+G.Ai = function(){
     this.prePattern = [ // Шаблоны построения фигур и их веса. "x" в дальнейшем заменяется на крестик (1) или нолик (2), 0 - свободная ячейка
         {w: 10000, p: ['xxxxx']}, // Пять в ряд. Победа
         {w: 1000, p: ['0xxxx0']}, // Открытая четверка. Один ход до победы, 100% победа (соперник не может закрыть одним ходом)
@@ -14,4 +14,25 @@ G.Pattern = function(){
         {w: 10, p: ['000xx000']}, // Открытая двойка
         {w: 5, p: ['0xx0']} // Открытая двойка
     ];
+
+    function step(_field){
+
+        var field = _field;
+
+        var random = null;
+
+        (function randomStep(){
+            var tempRandom = Math.random() * field.length;
+            tempRandom = tempRandom.toFixed(0);
+            if(field[tempRandom] == 'x' || field[tempRandom] == 'o'){
+                randomStep();
+            }
+            random = tempRandom;
+        })();
+        return random;
+    }
+
+    return{
+        step: step
+    }
 };

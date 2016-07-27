@@ -7,10 +7,13 @@
  *
  * */
 
-G.Model = function () {
+G.Model = function (_ai) {
+
+    var ai = _ai;
 
     var config = {};
     var typeStep = 'x';
+    var stepCount = 0;
 
     // Основной массив с данными поля
     var field = [];
@@ -67,8 +70,6 @@ G.Model = function () {
             });
             checkWin(field);
             toggleTypeStep();
-        } else {
-            return false;
         }
     }
 
@@ -77,13 +78,21 @@ G.Model = function () {
             gameWithMan(numEl);
         }
         if((config.type === 'x' && typeStep === 'o') || (config.type === 'o' && typeStep === 'x')){
-            console.log('Ходит компьютер')
+            var pcStep = ai.step(field);
+            modelChangedSubject.notifyObservers({
+                type: 'gameLoop',
+                numFieldEl: pcStep,
+                typeMove: typeStep
+            });
+            checkWin(field);
+            toggleTypeStep();
         }
 
     }
 
 
     function move(ev) {
+        stepCount++;
         var numEl = $(ev.target).attr('id');
         switch (config.opponent) {
             case 'man':
@@ -96,10 +105,18 @@ G.Model = function () {
     }
 
     function win(){
-        modelChangedSubject.notifyObservers({
-            type: 'gameWin',
-            winnerType: typeStep
-        });
+        if(!config.endGame){
+            modelChangedSubject.notifyObservers({
+                type: 'gameWin',
+                winnerType: typeStep,
+                userType: config.type,
+                opponent: config.opponent
+            });
+            config.endGame = true;
+        } else {
+            return false;
+        }
+
     }
 
     /*
@@ -179,6 +196,10 @@ G.Model = function () {
 
     }
 
+    function getStepCount(){
+        return stepCount;
+    }
+
 
 
     function getElementData(field, row, col) {
@@ -189,6 +210,7 @@ G.Model = function () {
 
     return {
         modelChangedSubject: modelChangedSubject,
+        getStepCount: getStepCount,
         getTypeStep: getTypeStep,
         getGameData: getGameData,
         setGameData: setGameData,

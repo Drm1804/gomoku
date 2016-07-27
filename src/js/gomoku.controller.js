@@ -23,10 +23,17 @@ G.Controller = function (_model, _view) {
 
         // Запускаем игру
         var size = model.getGameData().size;
+        var type = model.getGameData().type;
         view.toggleStartWindow();
         view.createHtmlGameField(size);
         view.createHtmlFinalWindow();
         runFieldObserver();
+
+        // Если выбран режим игры с компьютером, и первый ход за компьютером, то имитируем событие
+        var stepCount = model.getStepCount();
+        if(stepCount == 0 && type == 'o'){
+            model.move(ev);
+        }
         return false;
     });
 

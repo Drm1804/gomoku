@@ -207,30 +207,23 @@ G.View = function (_model, rootObject) {
     }
 
     function gameFinal(ev) {
+
         if (ev.type === 'gameWin') {
-
-            // Формируем сообщение
-
-            var gameConfig = model.getGameData();
-            var endTypeStep = model.getTypeStep();
-
             // Настраиваем название игроков
-            if (gameConfig.opponent === 'man') {
-                if (endTypeStep === 'x') {
+            if (ev.opponent === 'man') {
+                if (ev.winnerType === 'x') {
                     that.jqMap.finalText.text('Победу одержал игрок 1 ');
                 }
-                if (endTypeStep === 'o') {
+                if (ev.winnerType === 'o') {
                     that.jqMap.finalText.text('Победу одержал игрок 2 ');
                 }
             }
 
-            if (gameConfig.opponent === 'pc') {
-                if (gameConfig.type === 'x') {
-                    that.jqMap.menuItemName.eq(0).text('Игрок ');
-                    that.jqMap.menuItemName.eq(1).text('Компьютер ');
-                } else if (gameConfig.type === 'o') {
-                    that.jqMap.menuItemName.eq(0).text('Компьютер ');
-                    that.jqMap.menuItemName.eq(1).text('Игрок ');
+            if (ev.opponent === 'pc') {
+                if (ev.userType === ev.winnerType) {
+                    that.jqMap.finalText.text('Игрок одержал победу');
+                } else if (ev.type != ev.winnerType) {
+                    that.jqMap.finalText.text('Компьютер одержал победу');
                 }
             }
 
